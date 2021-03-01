@@ -1,42 +1,84 @@
-import websocket
-import json
-import pprint
-
-# See: https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md#klinecandlestick-streams
+import websocket, json, pprint, talib, numpy
+from binance.client import Client
+from binance.enums import *
 
 # Stream name <symbol><stream><interval>
-# SOCKET = "wss://stream.binance.com:9443/ws/ethusdt@kline_1m"
+# See: https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md#klinecandlestick-streams
+
 SOCKET = "wss://stream.binance.com:9443/ws/dogeusdt@kline_1m"
+RSI_PERIOD = 14
+RSI_OVERBOUGHT = 70
+RSI_OVERSOLD = 30
+TRADE_SYMBOL = 'DOGEUSD'
+TRADE_QUANTITY = 420
 
 closes = []
+in_position = False
 
+client = Client(config.API_KEY, config.API_SECRET, tld="uk")
 
-def on_message(ws, message):
+def order(side, quantity, symbol, order_type=ORDER_TYPE_MARKET):
+    try:
+        print("sending order")
+        order = client.create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
+        print(order)
+    except Exception as e:
+        return false
+
+    return true
+
+def on_message(ws, message):                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
     global closes
     print("received message")
-    json_message = json.loads(message)
+    json_message = json.loads(message)                   
     pprint.pprint(json_message)
 
-    candle = json_message["k"]
+    candle = json_message["k"]           
     is_candle_closed = candle["x"]
     close = candle["c"]
 
     if is_candle_closed:
-        print("Candle closed at {}".format(close))
+        print("Candle closed at {}".format(close))                                  
         closes.append(float(close))
         print("closes")
         print(closes)
 
+        if len(closes) > RSI_PERIOD:
+            np_closes = numpy.array(closes)
+            rsi = talib.RSI(np_closes, RSI_PERIOD)
+            print("all rsis calculated so far")
+            print(rsi)      
+            last_rsi = rsi[-1]
+            print("the current rsi is {}".format(last_rsi))
 
-def on_error(ws, error):
+            if last_rsi > RSI_OVERBOUGHT:
+                if in_position:
+                    print("overbought SELL")
+                    order_succeeded = order(SIDE_SELL, TRADE_QUANTITY, TRADE_SYMBOL)
+                    if order_succeeded:
+                        in_position = False
+                else:
+                    print("overbought, not owned, nothing to do")
+            
+            if last_rsi < RSI_OVERSOLD:
+                if in_position:
+                    print("oversold, owned, nothing to do")
+                else:
+                    print("oversold BUY")
+                    order_succeeded = order(SIDE_BUY, TRADE_QUANTITY, TRADE_SYMBOL)
+                    if order_succeeded:
+                        in_position = True
+
+                                 
+def on_error(ws, error):                                         
     print("received error", error)
-
+       
 
 def on_close(ws):
     print("closed connection")
 
 
-def on_open(ws):
+def on_open(ws):    
     print("opened connection")
 
 
@@ -46,4 +88,4 @@ ws = websocket.WebSocketApp(SOCKET,
                             on_message=on_message,
                             on_error=on_error)
 
-ws.run_forever()
+ws.run_forever()           
