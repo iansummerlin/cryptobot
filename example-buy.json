@@ -1,0 +1,24 @@
+{
+    "symbol": "DOGEUSDT",
+    "orderId": 1234,
+    "orderListId": -1,
+    "clientOrderId": "gDHkAZ5mWYhe8u8Zzeei11",
+    "transactTime": 1614822004309,
+    "price": "0.00000000",
+    "origQty": "250.00000000",
+    "executedQty": "250.00000000",
+    "cummulativeQuoteQty": "12.61302500",
+    "status": "FILLED",
+    "timeInForce": "GTC",
+    "type": "MARKET",
+    "side": "BUY",
+    "fills": [
+        {
+            "price": "0.05045210",
+            "qty": "250.00000000",
+            "commission": "0.00003922",
+            "commissionAsset": "BNB",
+            "tradeId": 1234
+        }
+    ]
+}
