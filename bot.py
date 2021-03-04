@@ -1,4 +1,5 @@
 import websocket, json, pprint, talib, numpy
+import config
 from binance.client import Client
 from binance.enums import *
 
@@ -7,15 +8,15 @@ from binance.enums import *
 
 SOCKET = "wss://stream.binance.com:9443/ws/dogeusdt@kline_1m"
 RSI_PERIOD = 14
-RSI_OVERBOUGHT = 70
-RSI_OVERSOLD = 30
-TRADE_SYMBOL = 'DOGEUSD'
-TRADE_QUANTITY = 420
+RSI_OVERBOUGHT = 72
+RSI_OVERSOLD = 28
+TRADE_SYMBOL = 'DOGEUSDT'
+TRADE_QUANTITY = 250
 
 closes = []
 in_position = False
 
-client = Client(config.API_KEY, config.API_SECRET, tld="uk")
+client = Client(config.API_KEY, config.API_SECRET)
 
 def order(side, quantity, symbol, order_type=ORDER_TYPE_MARKET):
     try:
@@ -23,12 +24,14 @@ def order(side, quantity, symbol, order_type=ORDER_TYPE_MARKET):
         order = client.create_order(symbol=symbol, side=side, type=order_type, quantity=quantity)
         print(order)
     except Exception as e:
-        return false
+        print("error")
+        print(e)
+        return False
 
-    return true
+    return True
 
 def on_message(ws, message):                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-    global closes
+    global closes, in_position
     print("received message")
     json_message = json.loads(message)                   
     pprint.pprint(json_message)

@@ -1,0 +1,24 @@
+{
+    "symbol": "DOGEUSDT",
+    "orderId": 1234,
+    "orderListId": -1,
+    "clientOrderId": "XXXXXXXXXXXXX",
+    "transactTime": 1614718447998,
+    "price": "0.00000000",
+    "origQty": "250.00000000",
+    "executedQty": "250.00000000",
+    "cummulativeQuoteQty": "12.51500000",
+    "status": "FILLED",
+    "timeInForce": "GTC",
+    "type": "MARKET",
+    "side": "SELL",
+    "fills": [
+        {
+            "price": "0.05006000",
+            "qty": "250.00000000",
+            "commission": "0.01251500",
+            "commissionAsset": "USDT",
+            "tradeId": 1234
+        }
+    ]
+}
